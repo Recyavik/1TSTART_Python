@@ -1,0 +1,45 @@
+CREATE TABLE IF NOT EXISTS counterparty (
+    id      INTEGER   PRIMARY KEY AUTOINCREMENT,
+    name    TEXT,
+    inn     TEXT (12) UNIQUE,
+    kpp     TEXT (9)  DEFAULT (0),
+    address TEXT,
+    phone   TEXT
+);
+
+CREATE TABLE IF NOT EXISTS products (
+    id     INTEGER  PRIMARY KEY AUTOINCREMENT
+                    NOT NULL,
+    name   TEXT,
+    number INTEGER,
+    unit   TEXT (3) DEFAULT ('шт.'),
+    price  REAL     DEFAULT (0.0) 
+);
+
+CREATE TABLE IF NOT EXISTS trade (
+    id              INTEGER     PRIMARY KEY AUTOINCREMENT
+                                UNIQUE,
+    date            DATE,
+    id_сounterparty INTEGER     REFERENCES counterparty (id),
+    is_income       INTEGER (1) NOT NULL
+                                CHECK (is_income = 1 OR 
+                                       is_income = -1) 
+);
+
+CREATE TABLE IF NOT EXISTS trade_table (
+    id              INTEGER PRIMARY KEY,
+    id_counterparty INTEGER REFERENCES counterparty (id),
+    id_products     INTEGER REFERENCES products (id),
+    number          INTEGER NOT NULL,
+    price           REAL    DEFAULT (0.0) 
+                            NOT NULL,
+    cost            REAL    AS (number * price) 
+                            NOT NULL
+);
+
+
+
+
+
+
+
